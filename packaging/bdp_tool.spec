@@ -11,13 +11,18 @@
 # The repo root is the working directory PyInstaller is invoked from (see the CI
 # workflow), so source paths below are relative to the repo root.
 
+# PyInstaller resolves relative paths in a spec against the spec's own directory
+# (SPECPATH = the packaging/ folder), so anchor everything to the repo root one level up.
+import os
+ROOT = os.path.abspath(os.path.join(SPECPATH, '..'))
+
 a = Analysis(
-    ['bdp_dock_pump_test.py'],
-    pathex=[],
+    [os.path.join(ROOT, 'bdp_dock_pump_test.py')],
+    pathex=[ROOT],
     binaries=[],
     # (source_on_disk, destination_dir_inside_bundle) -- '.' puts it at the bundle root,
     # which is exactly where resource_path()/sys._MEIPASS looks for it at runtime.
-    datas=[('jeopardy.mid', '.')],
+    datas=[(os.path.join(ROOT, 'jeopardy.mid'), '.')],
     hiddenimports=['serial', 'serial.tools.list_ports'],
     hookspath=[],
     hooksconfig={},
