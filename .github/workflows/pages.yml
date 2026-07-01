@@ -1,0 +1,49 @@
+name: Deploy download page
+
+# Publishes the static download page (site/) to GitHub Pages. The page links to the
+# newest installer via the GitHub "latest release" redirect, so it never needs editing
+# when you cut a new release. If isit5oclock.org is hosted on Netlify/Vercel/Cloudflare
+# instead, you can ignore this workflow and drop site/ into that deploy -- the page is
+# fully portable and has no build step beyond substituting the repo slug.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Inject repository slug into the page
+        run: sed -i "s|__REPO__|${{ github.repository }}|g" site/index.html
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload page artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4

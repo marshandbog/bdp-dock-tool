@@ -1,0 +1,3 @@
+# Runtime dependency for the BDP Dock Pump Test Tool.
+# tkinter ships with CPython; only pyserial must be installed.
+pyserial>=3.5

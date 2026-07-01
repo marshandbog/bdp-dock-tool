@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# PyInstaller / Inno Setup build output
+build/
+dist/
+packaging/Output/
+*.spec.bak
+
+# Fortran build artifacts
+*.o
+*.mod
+bdp
+bdp90
+*.exe
+
+# OS cruft
+.DS_Store
+
+# Claude Code session/local config
+.claude/

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BDP Dock Pump Test Tool — Download</title>
+<!--
+  Static download page for the RV2900WD Dock BDP Pump Test Tool.
+
+  The download button points at the GitHub "latest release" redirect:
+      https://github.com/<owner>/<repo>/releases/latest/download/BDP-Tool-Setup.exe
+  which always resolves to the newest installer published by the release workflow,
+  so this page never needs editing between releases. The __REPO__ token is filled in
+  at deploy time by .github/workflows/pages.yml (or replace it by hand for other hosts).
+-->
+<style>
+  :root {
+    --bg: #1e1f22; --panel: #2a2b2e; --border: #44464b;
+    --text: #e8e8ea; --muted: #a8a9ad; --accent: #4d8eff; --accent-dark: #3d7ae0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    line-height: 1.55; display: flex; min-height: 100vh; flex-direction: column;
+    align-items: center; justify-content: center; padding: 2rem;
+  }
+  .card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 14px;
+    max-width: 560px; width: 100%; padding: 2.4rem 2.4rem 2rem;
+    box-shadow: 0 12px 40px rgba(0,0,0,.35);
+  }
+  h1 { margin: 0 0 .2rem; font-size: 1.55rem; }
+  .sub { color: var(--muted); margin: 0 0 1.6rem; }
+  .download {
+    display: inline-block; background: var(--accent); color: #fff; text-decoration: none;
+    font-weight: 600; font-size: 1.05rem; padding: .85rem 1.6rem; border-radius: 9px;
+    transition: background .15s; border: none;
+  }
+  .download:hover { background: var(--accent-dark); }
+  .meta { color: var(--muted); font-size: .85rem; margin-top: .7rem; }
+  ul { padding-left: 1.1rem; color: var(--muted); font-size: .92rem; }
+  li { margin: .25rem 0; }
+  .note {
+    margin-top: 1.6rem; padding: .9rem 1rem; border-left: 3px solid var(--accent);
+    background: #33353a; border-radius: 6px; font-size: .88rem; color: var(--muted);
+  }
+  code { background: #33353a; padding: .1rem .35rem; border-radius: 4px; color: var(--text); }
+  footer { color: var(--border); font-size: .8rem; margin-top: 1.8rem; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+  <main class="card">
+    <h1>BDP Dock Pump Test Tool</h1>
+    <p class="sub">Serial diagnostics for the RV2900WD dock — pumps, valves, heaters,
+       sensors, and MIDI, per BDP Command Spec V2.</p>
+
+    <a class="download" href="https://github.com/__REPO__/releases/latest/download/BDP-Tool-Setup.exe">
+      ⬇ Download for Windows
+    </a>
+    <p class="meta">Windows 10/11 · 64-bit · free · installs in seconds</p>
+
+    <h3>What it does</h3>
+    <ul>
+      <li>Connect to the dock over any COM port (115200-8N1) and drive individual tests.</li>
+      <li>Query sensors and actuate pumps, valves, heaters, and power rails.</li>
+      <li>Send a MIDI file over the port — raw dump or play-as-MIDI.</li>
+    </ul>
+
+    <div class="note">
+      <strong>Heads up:</strong> the installer isn't code-signed yet, so Windows
+      SmartScreen may say "unknown publisher." Click <em>More info → Run anyway</em>.
+      Prefer to build it yourself? Grab the source and run
+      <code>pyinstaller packaging/bdp_tool.spec</code>.
+    </div>
+
+    <footer>isit5oclock.org · it's always 5 o'clock somewhere</footer>
+  </main>
+</body>
+</html>

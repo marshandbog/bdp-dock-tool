@@ -1,0 +1,65 @@
+name: Build Windows installer
+
+# Builds the .exe + Inno Setup installer on a Windows runner and publishes the
+# installer as a GitHub Release asset. Triggered by pushing a version tag (v1.0.0),
+# or manually via the Actions tab (produces a downloadable artifact, no release).
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write        # needed to create the Release and upload the asset
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt pyinstaller
+
+      - name: Build the executable (PyInstaller)
+        run: pyinstaller --clean --noconfirm packaging/bdp_tool.spec
+
+      - name: Determine version string
+        id: ver
+        shell: bash
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=0.0.0-dev" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install Inno Setup
+        run: choco install innosetup --no-progress -y
+
+      - name: Build the installer (Inno Setup)
+        run: >
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+          /DMyAppVersion=${{ steps.ver.outputs.version }}
+          packaging\installer.iss
+
+      - name: Upload installer as a build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: BDP-Tool-Setup
+          path: packaging/Output/BDP-Tool-Setup.exe
+          if-no-files-found: error
+
+      - name: Publish to GitHub Release (tags only)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: packaging/Output/BDP-Tool-Setup.exe
+          fail_on_unmatched_files: true
+          generate_release_notes: true
